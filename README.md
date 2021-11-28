@@ -1,6 +1,32 @@
 [![ReportCard][ReportCard-Image]][ReportCard-URL]
 [![Build Status](https://travis-ci.org/aws/amazon-ssm-agent.svg?branch=mainline)](https://travis-ci.org/aws/amazon-ssm-agent)
 
+# Fork Changes
+
+*Note: this is not intended for production use*
+
+This fork is a hack to get amazon-ssm-agent running as an unprivileged user for the purposes of SSM Session Manager. This is useful if you
+want to hide traffic over a commonly used AWS service, but don't have root on an instance, or don't want to interfere with an already
+running ssm-agent process.
+
+You'll likely need to build this manually using the following:
+
+```
+docker run -it --rm --name ssm-agent-build-container -v `pwd`:/amazon-ssm-agent ssm-agent-build-image make build-linux
+```
+
+This will put binaries in `bin/linux_amd64` which can be copied to any directory of the target node.
+
+Registering the agent can then be done with:
+
+```
+./amazon-ssm-agent -register -code "..." -id "..." -region "us-east-1"
+```
+
+To start the agent run `./amazon-ssm-agent`, the other binaries are expected to be in the same directory. Logs and other artifacts should
+end up in ~/.ssm. Using `aws ssm start-session` with the newly registered instance ID should start a shell as the user running
+`./amazon-ssm-agent`.
+
 # Amazon SSM Agent
 
 The Amazon EC2 Simple Systems Manager (SSM) Agent is software developed for the [Simple Systems Manager Service](http://docs.aws.amazon.com/ssm/latest/APIReference/Welcome.html). The SSM Agent is the primary component of a feature called Run Command.
