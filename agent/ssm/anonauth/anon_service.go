@@ -15,6 +15,7 @@
 package anonauth
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/aws/amazon-ssm-agent/agent/appconfig"
@@ -65,7 +66,10 @@ func NewAnonymousService(logger logger.T, region string) AnonymousService {
 	}
 
 	// Create a session to share service client config and handlers with
-	ssmSess := session.New(awsConfig)
+	ssmSess, err := session.NewSession(awsConfig)
+	if err != nil {
+		panic(fmt.Errorf("creating new session: %w", err))
+	}
 	ssmSess.Handlers.Build.PushBack(request.MakeAddToUserAgentHandler(appConfig.Agent.Name, appConfig.Agent.Version))
 
 	ssmService := ssm.New(ssmSess)

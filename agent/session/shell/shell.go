@@ -77,9 +77,8 @@ type IShellPlugin interface {
 // NewPlugin returns a new instance of the Shell Plugin
 func NewPlugin(context context.T, name string) (*ShellPlugin, error) {
 	var plugin = ShellPlugin{
-		context:   context,
-		name:      name,
-		runAsUser: appconfig.DefaultRunAsUserName,
+		context: context,
+		name:    name,
 		logger: logger{
 			ptyTerminated:               make(chan bool),
 			cloudWatchStreamingFinished: make(chan bool),

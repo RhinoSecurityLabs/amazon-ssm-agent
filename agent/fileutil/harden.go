@@ -8,7 +8,8 @@ import (
 )
 
 const (
-	RWPermission = 0600
+	RWPermission  = 0600
+	RWXPermission = 0700
 )
 
 // HardenedWriteFile calls ioutil.WriteFile and guarantees a hardened permission
@@ -28,7 +29,7 @@ func HardenedWriteFile(filename string, data []byte) (err error) {
 		}
 	}
 
-	if err = Harden(filename); err != nil {
+	if err = Harden(filename, false); err != nil {
 		return
 	}
 
@@ -42,6 +43,6 @@ func HardenedWriteFile(filename string, data []byte) (err error) {
 // RecursivelyHarden the files and directory under the specified path.
 func RecursivelyHarden(path string) error {
 	return filepath.Walk(path, func(p string, fi os.FileInfo, err error) error {
-		return Harden(p)
+		return Harden(p, fi.IsDir())
 	})
 }

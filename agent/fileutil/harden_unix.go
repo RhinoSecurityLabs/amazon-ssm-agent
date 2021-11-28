@@ -27,25 +27,36 @@ const (
 	permissionMask os.FileMode = 0777
 )
 
-// Harden the provided path with non-inheriting ACL for admin access only.
-func Harden(path string) (err error) {
-
+// Harden the provided path with non-inheriting ACL for access from the current user only.
+// If isDir is true the executable bit is set on the file permissions, otherwise the current
+// user gets read/write permissions to the file specified by path.
+func Harden(path string, isDir bool) (err error) {
 	var fi os.FileInfo
+
+	// Directories should be executable.
+	var perm os.FileMode
+	if isDir {
+		perm = RWXPermission
+	} else {
+		perm = RWPermission
+	}
 
 	if fi, err = os.Stat(path); err != nil {
 		return
 	}
 
-	if fi.Mode()&permissionMask != RWPermission {
-		if err = os.Chmod(path, RWPermission); err != nil {
+	if fi.Mode()&permissionMask != perm {
+		if err = os.Chmod(path, perm); err != nil {
 			return
 		}
 	}
 
-	s := fi.Sys().(*syscall.Stat_t)
-	if s.Uid != rootUid || s.Gid != rootGid {
-		if err = os.Chown(path, int(rootUid), int(rootGid)); err != nil {
-			return
+	if os.Geteuid() == 0 {
+		s := fi.Sys().(*syscall.Stat_t)
+		if s.Uid != rootUid || s.Gid != rootGid {
+			if err = os.Chown(path, int(rootUid), int(rootGid)); err != nil {
+				return
+			}
 		}
 	}
 	return

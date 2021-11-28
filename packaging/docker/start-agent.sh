@@ -2,9 +2,9 @@
 
 set -e
 
-declare -r PERSISTENT_STORAGE_BASE_DIR="/.ssm/containers/current"
+declare -r PERSISTENT_STORAGE_BASE_DIR=~/.ssm/containers/current
 declare -r USER_DATA="${PERSISTENT_STORAGE_BASE_DIR}/user-data"
-declare -r SSM_AGENT_LOCAL_STATE_DIR="/var/lib/amazon/ssm"
+declare -r SSM_AGENT_LOCAL_STATE_DIR=~/.ssm
 
 log() {
   echo "$*" >&2
@@ -24,7 +24,7 @@ enable_hybrid_env_ssm() {
   if ! amazon-ssm-agent -register -code "${activation_code}" -id "${activation_id}" -region "${region}"; then
 
     # Print errors from ssm agent error log
-    cat "/var/log/amazon/ssm/errors.log" >&2
+    cat ~/.ssm/logs/errors.log >&2
 
     log "Failed to register with AWS Systems Manager (SSM)"
     exit 1

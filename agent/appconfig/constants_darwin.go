@@ -17,9 +17,14 @@
 // Package appconfig manages the configuration of the agent.
 package appconfig
 
-const (
+import (
+	"os"
+	"path/filepath"
+)
+
+var (
 	// DefaultProgramFolder is the default folder for SSM
-	DefaultProgramFolder = "/opt/aws/ssm/"
+	DefaultProgramFolder = filepath.Join(os.Getenv("HOME") + "/.ssm/")
 
 	// AppConfigPath is the path of the AppConfig
 	AppConfigPath = DefaultProgramFolder + AppConfigFileName
@@ -55,10 +60,10 @@ const (
 	DefaultDataStorePath = DefaultProgramFolder + "data/"
 
 	// EC2ConfigDataStorePath represents the directory for storing ec2 config data
-	EC2ConfigDataStorePath = "/var/lib/amazon/ec2config/"
+	EC2ConfigDataStorePath = os.Getenv("HOME") + "/.ssm/lib/ec2config/"
 
 	// EC2ConfigSettingPath represents the directory for storing ec2 config settings
-	EC2ConfigSettingPath = "/var/lib/amazon/ec2configservice/"
+	EC2ConfigSettingPath = os.Getenv("HOME") + "/.ssm/lib/ec2configservice/"
 
 	// UpdaterArtifactsRoot represents the directory for storing update related information
 	UpdaterArtifactsRoot = DefaultProgramFolder + "update/"

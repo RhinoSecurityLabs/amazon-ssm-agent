@@ -17,9 +17,11 @@
 //Package message contains information for the IPC messages
 package message
 
-const (
+import "os"
+
+var (
 	DefaultIPCPrefix         = "ipc://"
-	DefaultCoreAgentChannel  = "/var/lib/amazon/ssm/ipc/"
+	DefaultCoreAgentChannel  = os.Getenv("HOME") + "/.ssm/ipc/"
 	GetWorkerHealthChannel   = DefaultIPCPrefix + DefaultCoreAgentChannel + "health"
 	TerminationWorkerChannel = DefaultIPCPrefix + DefaultCoreAgentChannel + "termination"
 )

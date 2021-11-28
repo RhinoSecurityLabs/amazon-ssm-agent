@@ -195,6 +195,8 @@ github.com/mitchellh/go-ps
 # github.com/nightlyone/lockfile v0.0.0 => ./extra/lockfile
 ## explicit
 github.com/nightlyone/lockfile
+# github.com/nsf/gocode v0.0.0-20190302080247-5bee97b48836
+## explicit
 # github.com/pborman/ansi v1.0.0
 ## explicit
 github.com/pborman/ansi

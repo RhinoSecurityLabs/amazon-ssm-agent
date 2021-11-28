@@ -23,12 +23,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/aws/amazon-ssm-agent/agent/managedInstances/user"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
-	"syscall"
 	"time"
 
 	"github.com/aws/amazon-ssm-agent/agent/appconfig"
@@ -126,20 +126,13 @@ func StartCommandExecutor(
 
 			sessionUser = config.RunAsUser
 		} else {
-			// Start as ssm-user
-			// Create ssm-user before starting a session.
-			u.CreateLocalAdminUser(log)
-
-			sessionUser = appconfig.DefaultRunAsUserName
+			current, err := user.Current()
+			if err != nil {
+				return fmt.Errorf("determining RunAs user: %s", err)
+			}
+			sessionUser = current.Name
 		}
-
-		// Get the uid and gid of the runas user.
-		uid, gid, groups, err := getUserCredentials(log, sessionUser)
-		if err != nil {
-			return err
-		}
-		cmd.SysProcAttr = &syscall.SysProcAttr{}
-		cmd.SysProcAttr.Credential = &syscall.Credential{Uid: uid, Gid: gid, Groups: groups, NoSetGroups: false}
+		log.Errorf("sessionUser: %s\n", sessionUser)
 
 		// Setting home environment variable for RunAs user
 		runAsUserHomeEnvVariable := constants.HomeEnvVariable + sessionUser
@@ -165,6 +158,16 @@ func StartCommandExecutor(
 		plugin.stdin = nil
 		plugin.stdout = outputReader
 	} else {
+		log.Errorf("cmd: %v\n", cmd)
+		log.Errorf("cmd path: %v\n", cmd.Path)
+		log.Errorf("cmd env: %v\n", cmd.Env)
+		log.Errorf("cmd dir: %v\n", cmd.Dir)
+		log.Errorf("cmd sysproxattr: %v\n", cmd.SysProcAttr)
+		//log.Errorf("cmd sysproxattr credential: %v\n", *cmd.SysProcAttr.Credential)
+		//log.Errorf("cmd sysproxattr credential uid: %v\n", cmd.SysProcAttr.Credential.Uid)
+		//log.Errorf("cmd sysproxattr credential gid: %v\n", cmd.SysProcAttr.Credential.Gid)
+		//log.Errorf("cmd sysproxattr credential groups: %v\n", cmd.SysProcAttr.Credential.Groups)
+		//log.Errorf("cmd sysproxattr credential nosetgroups: %v\n", cmd.SysProcAttr.Credential.NoSetGroups)
 		ptyFile, err = pty.Start(cmd)
 		if err != nil {
 			log.Errorf("Failed to start pty: %s\n", err)

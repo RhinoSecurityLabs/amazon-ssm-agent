@@ -1,4 +1,4 @@
-Latest
+3.1.0.0
 ===============
 - Add diagnostics command to ssm-cli
 - Fix caching for onprem credentials

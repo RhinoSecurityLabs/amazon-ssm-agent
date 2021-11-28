@@ -17,6 +17,7 @@ package datastore
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/aws/amazon-ssm-agent/agent/appconfig"
 	"os"
 	"sync"
 
@@ -94,7 +95,7 @@ func (localFileStore *LocalFileStore) exists(name string) (bool, error) {
 
 // createPath makes directory with ReadWriteAccess
 func (localFileStore *LocalFileStore) createPath(path string) error {
-	err := localFileStore.fileSystem.MkdirAll(path, ReadWriteAccess)
+	err := localFileStore.fileSystem.MkdirAll(path, appconfig.ReadWriteExecuteAccess)
 	if err != nil {
 		err = fmt.Errorf("failed to create directory %v. %v", path, err)
 	}

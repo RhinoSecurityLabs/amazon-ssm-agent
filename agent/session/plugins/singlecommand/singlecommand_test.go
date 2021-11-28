@@ -54,15 +54,15 @@ func (suite *SingleCommandTestSuite) SetupTest() {
 	shellProps := mgsContracts.ShellProperties{
 		Linux: mgsContracts.ShellConfig{
 			Commands:      "ls",
-			RunAsElevated: true,
+			RunAsElevated: false,
 		},
 		Windows: mgsContracts.ShellConfig{
 			Commands:      "date",
-			RunAsElevated: true,
+			RunAsElevated: false,
 		},
 		MacOS: mgsContracts.ShellConfig{
 			Commands:      "ls",
-			RunAsElevated: true,
+			RunAsElevated: false,
 		},
 	}
 

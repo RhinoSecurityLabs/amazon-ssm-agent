@@ -20,10 +20,11 @@ package main
 import (
 	"github.com/aws/amazon-ssm-agent/agent/appconfig"
 	"github.com/aws/amazon-ssm-agent/agent/versionutil"
+	"os"
 )
 
-const (
-	legacyUpdaterArtifactsRoot   = "/var/log/amazon/ssm/update/"
+var (
+	legacyUpdaterArtifactsRoot   = os.Getenv("HOME") + "/.ssm/logs/update"
 	firstAgentWithNewUpdaterPath = "1.1.86.0"
 )
 

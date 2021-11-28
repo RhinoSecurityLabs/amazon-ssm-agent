@@ -26,6 +26,7 @@ require (
 	github.com/hectane/go-acl v0.0.0-20151103031024-7f56832555fc // Don't update -- breaks
 	github.com/mitchellh/go-ps v1.0.0
 	github.com/nightlyone/lockfile v0.0.0
+	github.com/nsf/gocode v0.0.0-20190302080247-5bee97b48836 // indirect
 	github.com/pborman/ansi v1.0.0
 	github.com/stretchr/testify v1.7.0
 	github.com/twinj/uuid v0.0.0-20151029044442-89173bcdda19 // Don't update -- breaks

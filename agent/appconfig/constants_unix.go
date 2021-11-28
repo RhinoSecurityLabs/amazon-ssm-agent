@@ -26,10 +26,9 @@ import (
 	"github.com/aws/amazon-ssm-agent/agent/network/certreader"
 )
 
-const (
-
+var (
 	// AgentExtensions specified the root folder for various kinds of downloaded content
-	AgentData = "/var/lib/amazon/ssm/"
+	AgentData = os.Getenv("HOME") + "/.ssm/lib/"
 
 	// PackageRoot specifies the directory under which packages will be downloaded and installed
 	PackageRoot = AgentData + "packages"
@@ -62,10 +61,10 @@ const (
 	DefaultDataStorePath = AgentData
 
 	// EC2ConfigDataStorePath represents the directory for storing ec2 config data
-	EC2ConfigDataStorePath = "/var/lib/amazon/ec2config/"
+	EC2ConfigDataStorePath = os.Getenv("HOME") + "/.ssm/lib/ec2config/"
 
 	// EC2ConfigSettingPath represents the directory for storing ec2 config settings
-	EC2ConfigSettingPath = "/var/lib/amazon/ec2configservice/"
+	EC2ConfigSettingPath = os.Getenv("HOME") + "/.ssm/lib/ec2configservice/"
 
 	// UpdaterArtifactsRoot represents the directory for storing update related information
 	UpdaterArtifactsRoot = AgentData + "update/"
@@ -106,16 +105,17 @@ const (
 	customCertificateFileName = "amazon-ssm-agent.crt"
 
 	// SSM Agent Update download legacy path
-	LegacyUpdateDownloadFolder = "/var/log/amazon/ssm/download"
+
+	LegacyUpdateDownloadFolder = os.Getenv("HOME") + "/.ssm/logs/download"
 )
 
 // PowerShellPluginCommandName is the path of the powershell.exe to be used by the runPowerShellScript plugin
 var PowerShellPluginCommandName string
 
 // DefaultProgramFolder is the default folder for SSM
-var DefaultProgramFolder = "/etc/amazon/ssm/"
+var DefaultProgramFolder = os.Getenv("HOME") + "/.ssm/"
 
-var defaultWorkerPath = "/usr/bin/"
+var defaultWorkerPath = "./"
 var DefaultSSMAgentBinaryPath = defaultWorkerPath + "amazon-ssm-agent"
 var DefaultSSMAgentWorker = defaultWorkerPath + "ssm-agent-worker"
 var DefaultDocumentWorker = defaultWorkerPath + "ssm-document-worker"
@@ -191,13 +191,13 @@ func validateAgentBinary(filename, curdir string) bool {
 		mode := info.Mode()
 		fileSys := info.Sys()
 
-		if (mode.Perm() & NecessaryAgentBinaryPermissionMask) != NecessaryAgentBinaryPermissionMask {
+		if (int(mode.Perm()) & NecessaryAgentBinaryPermissionMask) != NecessaryAgentBinaryPermissionMask {
 			// Some necessary permissions are not set
 			fmt.Println("Warning: Some necessary permissions are not set for: ", filename)
 			return false
 		}
 
-		if (mode.Perm() & DisallowedAgentBinaryPermissionMask) != 0 {
+		if (int(mode.Perm()) & DisallowedAgentBinaryPermissionMask) != 0 {
 			// Some disallowed permissions are set
 			fmt.Println("Warning: Some disallowed permissions are set for: ", filename)
 			return false
@@ -216,13 +216,6 @@ func validateRelativeConfigFile(filePath string) bool {
 	// Get folder info
 	info, err := os.Stat(filepath.Dir(filePath))
 	if err != nil {
-		return false
-	}
-
-	// Get folder resource information
-	folderSys := info.Sys()
-	if folderSys.(*syscall.Stat_t).Uid != 0 ||
-		folderSys.(*syscall.Stat_t).Gid != 0 {
 		return false
 	}
 

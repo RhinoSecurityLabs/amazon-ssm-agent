@@ -148,7 +148,7 @@ func removeInvalidColon(pluginName string) string {
 // MakeDirs create the directories along the path if missing.
 func MakeDirs(destinationDir string) (err error) {
 	// create directory
-	err = fs.MkdirAll(destinationDir, appconfig.ReadWriteAccess)
+	err = fs.MkdirAll(destinationDir, appconfig.ReadWriteExecuteAccess)
 	if err != nil {
 		err = fmt.Errorf("failed to create directory %v. %v", destinationDir, err)
 	}
@@ -156,12 +156,10 @@ func MakeDirs(destinationDir string) (err error) {
 }
 
 // MakeDirsWithExecuteAccess create the directories along the path if missing.
+//
+// Deprecated: Directories should always be created with owner executable access, use MakeDirs instead.
 func MakeDirsWithExecuteAccess(destinationDir string) (err error) {
-	// create directory
-	if err = fs.MkdirAll(destinationDir, appconfig.ReadWriteExecuteAccess); err != nil {
-		err = fmt.Errorf("failed to create directory %v. %v", destinationDir, err)
-	}
-	return
+	return MakeDirs(destinationDir)
 }
 
 func GetFileMode(path string) (mode os.FileMode) {

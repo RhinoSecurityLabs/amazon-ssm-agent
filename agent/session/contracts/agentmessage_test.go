@@ -216,15 +216,15 @@ func TestParseAgentMessage(t *testing.T) {
 	shellPropsObj := ShellProperties{
 		Windows: ShellConfig{
 			Commands:      "date",
-			RunAsElevated: true,
+			RunAsElevated: false,
 		},
 		Linux: ShellConfig{
 			Commands:      "ls",
-			RunAsElevated: true,
+			RunAsElevated: false,
 		},
 		MacOS: ShellConfig{
 			Commands:      "ls",
-			RunAsElevated: true,
+			RunAsElevated: false,
 		},
 	}
 

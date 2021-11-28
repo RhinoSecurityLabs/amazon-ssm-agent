@@ -58,7 +58,7 @@ func (u *SessionUtil) DoesUserExist(username string) (bool, error) {
 	if err := cmd.Run(); err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
 			// The program has exited with an exit code != 0
-			return false, fmt.Errorf("encountered an error while checking for %s: %v", appconfig.DefaultRunAsUserName, exitErr.Error())
+			return false, fmt.Errorf("encountered an error while checking for %s: %v", username, exitErr.Error())
 		}
 		return false, nil
 	}
