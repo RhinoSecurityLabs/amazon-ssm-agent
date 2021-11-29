@@ -23,7 +23,7 @@ Registering the agent can then be done with:
 ./amazon-ssm-agent -register -code "..." -id "..." -region "us-east-1"
 ```
 
-To start the agent run `./amazon-ssm-agent`, the other binaries are expected to be in the same directory. Logs and other artifacts should
+To start the agent run `nohup ./amazon-ssm-agent`, the other binaries are expected to be in the same directory. Logs and other artifacts should
 end up in ~/.ssm. Using `aws ssm start-session` with the newly registered instance ID should start a shell as the user running
 `./amazon-ssm-agent`.
 
