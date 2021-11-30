@@ -23,9 +23,19 @@ Registering the agent can then be done with:
 ./amazon-ssm-agent -register -code "..." -id "..." -region "us-east-1"
 ```
 
-To start the agent run `nohup ./amazon-ssm-agent`, the other binaries are expected to be in the same directory. Logs and other artifacts should
-end up in ~/.ssm. Using `aws ssm start-session` with the newly registered instance ID should start a shell as the user running
-`./amazon-ssm-agent`.
+The Code and ID above can be abtained by creating a SSM Hybrid Activation in the account you control.
+
+To start the agent run `AWS_SHARED_CREDENTIALS_FILE=$HOME/.ssm/credentials nohup ./amazon-ssm-agent`, the other binaries are expected to be in
+the same directory. Logs and other artifacts should end up in ~/.ssm. Using `aws ssm start-session` with the newly registered instance ID should
+start a shell as the user running `AWS_SHARED_CREDENTIALS_FILE=$HOME/.ssm/credentials ./amazon-ssm-agent`.
+
+The reason for setting AWS_SHARED_CREDENTIALS_FILE is because SSM will update the credentials of the default profile using the role assigned during
+SSM Hybrid Activation setup. If you are running this version of amazon-ssm-agent as a shared user on an EC2 instance these credentials will override
+the role assigned to the EC2 instance normally available via the IMDS endpoint. Moving the shared credentials file to ~/.ssm/credentials ensures
+other processes running as the same user don't connect to your account unexpectedly.
+
+Also worth noting the default Hybrid Activation role has full access to SSM Parameter store. You may want to reduce these permissions, the targeted
+instance will have the permissions to access this role through the credentials file mentioned above.
 
 # Amazon SSM Agent
 
