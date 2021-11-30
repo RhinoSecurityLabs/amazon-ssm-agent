@@ -12,6 +12,7 @@ running ssm-agent process.
 You'll likely need to build this manually using the following:
 
 ```
+docker build -t ssm-agent-build-image .
 docker run -it --rm --name ssm-agent-build-container -v `pwd`:/amazon-ssm-agent ssm-agent-build-image make build-linux
 ```
 
