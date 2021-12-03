@@ -3,7 +3,7 @@
 
 # Fork Changes
 
-*Note: this is not intended for production use*
+*Note: this is not intended for production use and has only been tested on linux*
 
 This fork is a hack to get amazon-ssm-agent running as an unprivileged user for the purposes of SSM Session Manager. This is useful if you
 want to hide traffic over a commonly used AWS service, but don't have root on an instance, or don't want to interfere with an already
